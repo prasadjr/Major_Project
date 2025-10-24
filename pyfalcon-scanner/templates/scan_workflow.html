@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pyfalcon - Scan Workflow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #1f2937;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        main {
+            padding: 20px;
+            max-width: 1100px;
+            margin: auto;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 70%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #1f2937;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .stage {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 6px solid #1f2937;
+            background: #fff;
+        }
+        .stage.pending { border-color: #9ca3af; }
+        .stage.in-progress { border-color: #1e40af; }
+        .stage.done { border-color: green; }
+        .stage h3 { margin: 0 0 10px 0; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th { background: #1f2937; color: white; }
+        tr:nth-child(even) { background: #f9fafb; }
+        .up-to-date { color: green; font-weight: bold; }
+        .outdated { color: red; font-weight: bold; }
+        .file-list { margin: 10px 0 0 20px; font-family: monospace; color: #111827; }
+    </style>
+</head>
+<body>
+<header>Pyfalcon - Scan Workflow</header>
+<main>
+    <form id="scanForm">
+        <input type="text" id="repoUrl" placeholder="Enter GitHub repository URL" required>
+        <button type="submit">Start Scan</button>
+    </form>
+
+    <div id="stages">
+        <div class="stage pending" id="stage-clone">
+            <h3>1. Cloning Repository</h3>
+            <p>Status: <span class="status-text">Pending</span></p>
+        </div>
+        <div class="stage pending" id="stage-deps">
+            <h3>2. Finding & Parsing Dependencies</h3>
+            <p>Status: <span class="status-text">Pending</span></p>
+        </div>
+        <div class="stage pending" id="stage-latest">
+            <h3>3. Fetching Latest Versions</h3>
+            <p>Status: <span class="status-text">Pending</span></p>
+        </div>
+        <div class="stage pending" id="stage-vuln">
+            <h3>4. Checking Vulnerabilities</h3>
+            <p>Status: <span class="status-text">Pending</span></p>
+        </div>
+        <div class="stage pending" id="stage-report">
+            <h3>5. Building Report</h3>
+            <p>Status: <span class="status-text">Pending</span></p>
+        </div>
+    </div>
+
+    <div id="fileStructure" class="stage">
+        <h3>Scanned Python Files</h3>
+        <div class="file-list" id="fileList">No files scanned yet.</div>
+    </div>
+
+    <div id="reportTable"></div>
+
+</main>
+
+<script>
+    const form = document.getElementById('scanForm');
+    const repoInput = document.getElementById('repoUrl');
+
+    const stages = {
+        clone: document.getElementById('stage-clone'),
+        deps: document.getElementById('stage-deps'),
+        latest: document.getElementById('stage-latest'),
+        vuln: document.getElementById('stage-vuln'),
+        report: document.getElementById('stage-report')
+    };
+
+    function setStage(stage, status) {
+        const el = stages[stage];
+        el.classList.remove('pending','in-progress','done');
+        el.classList.add(status);
+        el.querySelector('.status-text').innerText = status.replace('-',' ').toUpperCase();
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const repoUrl = repoInput.value.trim();
+        if (!repoUrl) return;
+
+        // Reset stages & file list
+        Object.keys(stages).forEach(k => setStage(k,'pending'));
+        document.getElementById('reportTable').innerHTML = '';
+        document.getElementById('fileList').innerText = 'No files scanned yet.';
+
+        try {
+            setStage('clone','in-progress');
+
+            const res = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repo_url: repoUrl })
+            });
+
+            setStage('clone','done');
+            const data = await res.json();
+
+            if (!res.ok || !data.report_json) {
+                alert(data.error || "Scan failed");
+                return;
+            }
+
+            // Display scanned Python files
+            if (data.scanned_files && data.scanned_files.length) {
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                data.scanned_files.forEach(f => {
+                    const div = document.createElement('div');
+                    div.innerText = f;
+                    fileList.appendChild(div);
+                });
+            }
+
+            // Mark remaining stages as done
+            setStage('deps','done');
+            setStage('latest','done');
+            setStage('vuln','done');
+            setStage('report','done');
+
+            // Build report table
+            const report = data.report || data.report_json;
+            if (report && report.rows) {
+                const rows = report.rows;
+                if (rows.length > 0) {
+                    let html = `<table>
+                        <thead>
+                            <tr>
+                                <th>Dependency</th>
+                                <th>Current Version</th>
+                                <th>Latest Version</th>
+                                <th>Status</th>
+                                <th>Vulnerabilities / Suggestions</th>
+                            </tr>
+                        </thead><tbody>`;
+                    rows.forEach(r => {
+                        html += `<tr>
+                            <td>${r.dependency}</td>
+                            <td>${r.current_version || 'N/A'}</td>
+                            <td>${r.latest_version || 'N/A'}</td>
+                            <td>${r.current_version === r.latest_version ? '<span class="up-to-date">Up-to-date</span>' : '<span class="outdated">Outdated</span>'}</td>
+                            <td>${r.vulnerabilities && r.vulnerabilities.length ? r.vulnerabilities.map(v => v.advisory_id + ': ' + v.summary).join('<br>') : r.suggestions}</td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                    document.getElementById('reportTable').innerHTML = html;
+                }
+            }
+
+        } catch(err) {
+            alert('Error contacting server');
+        }
+    });
+</script>
+</body>
+</html>
