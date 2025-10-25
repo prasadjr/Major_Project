@@ -5,236 +5,152 @@
     <title>Pyfalcon - Scan Report</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css.css') }}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: #1f2937;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        main {
-            padding: 20px;
-            max-width: 1100px;
-            margin: auto;
-        }
-        .alert {
-            background: #fde68a;
-            color: #92400e;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .error {
-            background: #fecaca;
-            color: #b91c1c;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        input[type="text"] {
-            padding: 10px;
-            flex: 1;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background: #1f2937;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-        .download-buttons {
-            margin: 20px 0;
-        }
-        .download-buttons a {
-            text-decoration: none;
-            margin-right: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background: #1f2937;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background: #f9fafb;
-        }
-        .up-to-date {
-            color: green;
-            font-weight: bold;
-        }
-        .outdated {
-            color: red;
-            font-weight: bold;
-        }
-        .loading {
-            font-size: 18px;
-            font-weight: bold;
-            color: #1e40af;
-        }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 0; }
+        header { background: #1f2937; color: #fff; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; }
+        main { padding: 20px; max-width: 1200px; margin: auto; }
+        .file-box { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .file-box h3 { margin-top: 0; color: #1e40af; }
+        .dependency-list { margin: 10px 0; padding-left: 20px; }
+        .dependency-list li { margin-bottom: 5px; }
+        .up-to-date { color: green; font-weight: bold; }
+        .outdated { color: red; font-weight: bold; }
+        .loading { font-size: 18px; font-weight: bold; color: #1e40af; }
+        .alert { background: #fde68a; color: #92400e; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .error { background: #fecaca; color: #b91c1c; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        form { margin-bottom: 20px; display: flex; gap: 10px; }
+        input[type="text"] { padding: 10px; flex: 1; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; font-size: 16px; background: #1f2937; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        button:disabled { background: #9ca3af; cursor: not-allowed; }
+        .download-buttons { margin: 20px 0; }
+        .download-buttons a { text-decoration: none; margin-right: 10px; }
     </style>
 </head>
 <body>
-    <header>Pyfalcon - Scan Report</header>
-    <main>
-        <!-- Scan Workflow Button -->
-        <div style="margin-bottom: 20px;">
-            <a href="{{ url_for('scan_workflow') }}">
-                <button type="button">View Scan Workflow</button>
-            </a>
-        </div>
+<header>Pyfalcon - Scan Report</header>
+<main>
+    <!-- Scan Workflow Button -->
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('scan_workflow') }}"><button type="button">View Scan Workflow</button></a>
+    </div>
 
-        <form id="scanForm">
-            <input type="text" id="repoUrl" placeholder="Enter GitHub repository URL" required>
-            <button type="submit">Start Scan</button>
-        </form>
+    <form id="scanForm">
+        <input type="text" id="repoUrl" placeholder="Enter GitHub repository URL" required>
+        <button type="submit">Start Scan</button>
+    </form>
 
-        <div id="message">
-            {% if not report %}
-                <div class="alert">
-                    No report available. Enter a repo URL above and click "Start Scan".
-                </div>
-            {% endif %}
-        </div>
+    <div id="message">
+        {% if not report %}
+            <div class="alert">
+                No report available. Enter a repo URL above and click "Start Scan".
+            </div>
+        {% endif %}
+    </div>
 
-        <div id="loading" style="display:none;" class="loading">Scanning repository, please wait...</div>
+    <div id="loading" style="display:none;" class="loading">Scanning repository, please wait...</div>
+    <div id="error" style="display:none;" class="error"></div>
 
-        <div id="error" style="display:none;" class="error"></div>
+    <!-- Download Buttons -->
+    <div class="download-buttons" id="downloadButtons" style="display:none;">
+        <a id="downloadPdf" href="#" target="_blank"><button>Download PDF</button></a>
+        <a id="downloadJson" href="#" target="_blank"><button>Download JSON</button></a>
+    </div>
 
-        <!-- Download Buttons -->
-        <div class="download-buttons" id="downloadButtons" style="display:none;">
-            <a id="downloadPdf" href="#" target="_blank"><button>Download PDF</button></a>
-            <a id="downloadJson" href="#" target="_blank"><button>Download JSON</button></a>
-        </div>
-
-        <div id="reportTable">
-            {% if report %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dependency</th>
-                        <th>Current Version</th>
-                        <th>Latest Version</th>
-                        <th>Status</th>
-                        <th>Vulnerabilities / Suggestions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in report %}
-                    <tr>
-                        <td>{{ item.dependency }}</td>
-                        <td>{{ item.current_version or "N/A" }}</td>
-                        <td>{{ item.latest_version or "N/A" }}</td>
-                        <td>
-                            {% if item.up_to_date %}
-                                <span class="up-to-date">Up-to-date</span>
-                            {% else %}
-                                <span class="outdated">Outdated</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if item.pip_audit %}
-                                <ul>
-                                    {% for finding in item.pip_audit %}
-                                        <li>{{ finding.advisory_id or finding.vuln_id or "N/A" }} - {{ finding.summary or "No details" }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                {{ item.suggestions or "None" }}
-                            {% endif %}
-                        </td>
-                    </tr>
+    <!-- File-wise report -->
+    <div id="reportTable">
+        {% if report %}
+            {% for file_report in report %}
+            <div class="file-box">
+                <h3>{{ file_report.filename }}</h3>
+                <strong>Imports:</strong>
+                <ul class="dependency-list">
+                    {% for imp in file_report.imports %}
+                        <li>{{ imp }}</li>
                     {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-        </div>
-    </main>
+                </ul>
 
-    <script>
-        const form = document.getElementById('scanForm');
-        const repoInput = document.getElementById('repoUrl');
-        const loading = document.getElementById('loading');
-        const reportDiv = document.getElementById('reportTable');
-        const errorDiv = document.getElementById('error');
-        const messageDiv = document.getElementById('message');
-        const downloadDiv = document.getElementById('downloadButtons');
-        const downloadPdf = document.getElementById('downloadPdf');
-        const downloadJson = document.getElementById('downloadJson');
+                <strong>Dependencies:</strong>
+                <ul class="dependency-list">
+                    {% for dep in file_report.dependencies %}
+                        <li>
+                            {{ dep.name }} 
+                            {% if dep.current_version %} (current: {{ dep.current_version }}){% endif %} 
+                            {% if dep.latest_version %} → latest: {{ dep.latest_version }}{% endif %}
+                            {% if dep.up_to_date %}
+                                <span class="up-to-date">[Up-to-date]</span>
+                            {% else %}
+                                <span class="outdated">[Outdated]</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const repoUrl = repoInput.value.trim();
-            if (!repoUrl) return;
+                <strong>Vulnerabilities / Suggestions:</strong>
+                <ul class="dependency-list">
+                    {% for dep in file_report.dependencies %}
+                        {% if dep.pip_audit %}
+                            {% for v in dep.pip_audit %}
+                                <li>{{ v.advisory_id or v.vuln_id or 'N/A' }} - {{ v.summary or 'No details' }}</li>
+                            {% endfor %}
+                        {% elif dep.suggestions %}
+                            <li>{{ dep.suggestions }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</main>
 
-            loading.style.display = 'block';
-            errorDiv.style.display = 'none';
-            reportDiv.innerHTML = '';
-            messageDiv.style.display = 'none';
-            downloadDiv.style.display = 'none';
+<script>
+    const form = document.getElementById('scanForm');
+    const repoInput = document.getElementById('repoUrl');
+    const loading = document.getElementById('loading');
+    const reportDiv = document.getElementById('reportTable');
+    const errorDiv = document.getElementById('error');
+    const messageDiv = document.getElementById('message');
+    const downloadDiv = document.getElementById('downloadButtons');
+    const downloadPdf = document.getElementById('downloadPdf');
+    const downloadJson = document.getElementById('downloadJson');
 
-            try {
-                const res = await fetch('/api/scan', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ repo_url: repoUrl })
-                });
-                const data = await res.json();
-                loading.style.display = 'none';
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const repoUrl = repoInput.value.trim();
+        if (!repoUrl) return;
 
-                if (!res.ok) {
-                    errorDiv.style.display = 'block';
-                    errorDiv.innerText = data.error || 'Unknown error occurred';
-                    return;
-                }
+        loading.style.display = 'block';
+        errorDiv.style.display = 'none';
+        reportDiv.innerHTML = '';
+        messageDiv.style.display = 'none';
+        downloadDiv.style.display = 'none';
 
-                // Replace table with report HTML
-                reportDiv.innerHTML = data.report_html;
+        try {
+            const res = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repo_url: repoUrl })
+            });
+            const data = await res.json();
+            loading.style.display = 'none';
 
-                // Show download buttons
-                if (data.report_pdf) {
-                    downloadPdf.href = data.report_pdf;
-                    downloadDiv.style.display = 'block';
-                }
-                if (data.report_json) {
-                    downloadJson.href = data.report_json;
-                    downloadDiv.style.display = 'block';
-                }
-
-            } catch (err) {
-                loading.style.display = 'none';
+            if (!res.ok) {
                 errorDiv.style.display = 'block';
-                errorDiv.innerText = 'Error contacting server';
+                errorDiv.innerText = data.error || 'Unknown error occurred';
+                return;
             }
-        });
-    </script>
+
+            reportDiv.innerHTML = data.report_html;
+
+            // Show download buttons
+            if (data.report_pdf) { downloadPdf.href = data.report_pdf; downloadDiv.style.display = 'block'; }
+            if (data.report_json) { downloadJson.href = data.report_json; downloadDiv.style.display = 'block'; }
+
+        } catch (err) {
+            loading.style.display = 'none';
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = 'Error contacting server';
+        }
+    });
+</script>
 </body>
 </html>

@@ -1,0 +1,292 @@
+[
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\app.py",
+    "imports": [
+      "file_finder",
+      "pdfkit",
+      "vulnerability_tools",
+      "requirement_parser",
+      "report_builder",
+      "flask",
+      "import_parser",
+      "clone_repo",
+      "traceback",
+      "pypi_checker",
+      "os"
+    ],
+    "dependencies": [
+      {
+        "name": "file_finder",
+        "current_version": null,
+        "latest_version": "0.2.1",
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with 0.2.1"
+      },
+      {
+        "name": "pdfkit",
+        "current_version": "1.0.0",
+        "latest_version": "1.0.0",
+        "up_to_date": true,
+        "pip_audit": [],
+        "suggestions": null
+      },
+      {
+        "name": "vulnerability_tools",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "requirement_parser",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "report_builder",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "flask",
+        "current_version": "2.0",
+        "latest_version": "3.1.2",
+        "up_to_date": false,
+        "pip_audit": [],
+        "suggestions": "Consider upgrading from 2.0 \u2192 3.1.2"
+      },
+      {
+        "name": "import_parser",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "clone_repo",
+        "current_version": null,
+        "latest_version": "0.3.0",
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with 0.3.0"
+      },
+      {
+        "name": "traceback",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "pypi_checker",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "os",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\clone_repo.py",
+    "imports": [
+      "os",
+      "tempfile",
+      "urllib",
+      "subprocess"
+    ],
+    "dependencies": [
+      {
+        "name": "os",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "tempfile",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "urllib",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "subprocess",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\file_finder.py",
+    "imports": [
+      "os"
+    ],
+    "dependencies": [
+      {
+        "name": "os",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\import_parser.py",
+    "imports": [
+      "ast",
+      "collections"
+    ],
+    "dependencies": [
+      {
+        "name": "ast",
+        "current_version": null,
+        "latest_version": "0.0.2",
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with 0.0.2"
+      },
+      {
+        "name": "collections",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\pypi_checker.py",
+    "imports": [
+      "requests"
+    ],
+    "dependencies": [
+      {
+        "name": "requests",
+        "current_version": "2.28",
+        "latest_version": "2.32.5",
+        "up_to_date": false,
+        "pip_audit": [],
+        "suggestions": "Consider upgrading from 2.28 \u2192 2.32.5"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\report_builder.py",
+    "imports": [
+      "os",
+      "datetime",
+      "json"
+    ],
+    "dependencies": [
+      {
+        "name": "os",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "datetime",
+        "current_version": null,
+        "latest_version": "5.5",
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with 5.5"
+      },
+      {
+        "name": "json",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\requirement_parser.py",
+    "imports": [
+      "re"
+    ],
+    "dependencies": [
+      {
+        "name": "re",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  },
+  {
+    "filename": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\pyfalcon_repo_lnbbg2rg\\pyfalcon-scanner\\vulnerability_tools.py",
+    "imports": [
+      "os",
+      "subprocess",
+      "json"
+    ],
+    "dependencies": [
+      {
+        "name": "os",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "subprocess",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      },
+      {
+        "name": "json",
+        "current_version": null,
+        "latest_version": null,
+        "up_to_date": null,
+        "pip_audit": [],
+        "suggestions": "No pinned version found; consider pinning or checking compatibility with latest"
+      }
+    ]
+  }
+]
