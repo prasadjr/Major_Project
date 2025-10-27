@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Analysis Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  </head>
+  <body class="bg-light">
+    <div class="container py-5">
+      <h1>Analysis Results for {{ target_name }}</h1>
+      <p class="mb-3">
+        <a class="btn btn-success" href="{{ url_for('download_pdf') }}?path={{ pdf_fullpath|urlencode }}">Download PDF Report</a>
+        <a class="btn btn-secondary" href="{{ url_for('index') }}">Back</a>
+      </p>
+
+      {% for tool, data in reports.items() %}
+        <div class="card mb-3">
+          <div class="card-header">
+            <strong>{{ tool }}</strong> — {% if data.available %}Available{% else %}Missing{% endif %} — Return code: {{ data.returncode }}
+          </div>
+          <div class="card-body">
+            <pre style="max-height: 300px; overflow:auto; white-space: pre-wrap;">{{ data.preview }}</pre>
+          </div>
+        </div>
+      {% endfor %}
+
+      <p class="text-muted">If a tool is listed as "Missing", install it in the server environment and re-run.</p>
+    </div>
+  </body>
+</html>

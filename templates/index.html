@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Static Analysis Web</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  </head>
+  <body class="bg-light">
+    <div class="container py-5">
+      <h1 class="mb-4">Static Code Analysis</h1>
+
+      <form method="post" action="{{ url_for('analyze') }}" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label">Upload a Python file (.py)</label>
+          <input class="form-control" type="file" name="upload" accept=".py"/>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">OR Git repository URL</label>
+          <input class="form-control" type="url" name="git_url" placeholder="https://github.com/username/repo.git" />
+          <div class="form-text">If provided, the repo will be cloned and all .py files will be analyzed.</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Select tools</label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="pylint" id="pylint" checked>
+            <label class="form-check-label" for="pylint">Pylint</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="flake8" id="flake8" checked>
+            <label class="form-check-label" for="flake8">Flake8</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="bandit" id="bandit">
+            <label class="form-check-label" for="bandit">Bandit (security)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="mypy" id="mypy">
+            <label class="form-check-label" for="mypy">Mypy (type checking)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="radon_cc" id="radon_cc">
+            <label class="form-check-label" for="radon_cc">Radon (complexity)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="radon_raw" id="radon_raw">
+            <label class="form-check-label" for="radon_raw">Radon (raw metrics)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="tools" value="black_check" id="black_check">
+            <label class="form-check-label" for="black_check">Black (format check)</label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Analyze</button>
+      </form>
+
+      <hr/>
+      <small class="text-muted">Note: the server will attempt to run the selected tools on the uploaded file or cloned repo. Tools must be installed and available on PATH.</small>
+    </div>
+  </body>
+</html>
