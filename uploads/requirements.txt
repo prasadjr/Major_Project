@@ -1,0 +1,12 @@
+flask
+flask_mysqldb
+flask_mail
+pikepdf
+tqdm
+bs4
+pycryptodome
+pycryptodomex
+virustotal-api
+speedtest-cli
+PyPDF2
+ssl

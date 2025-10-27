@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependency Check Report</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin: 0; padding: 0; }
+        iframe { width: 100%; height: 100vh; border: none; }
+        h1 { padding: 20px; }
+    </style>
+</head>
+<body>
+    <h1>OWASP Dependency Check Report Preview</h1>
+    <iframe src="{{ url_for('serve_report', filename=report_file) }}"></iframe>
+</body>
+</html>
